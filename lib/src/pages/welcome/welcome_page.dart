@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../common/values/colors.dart';
-import '../../routes.dart';
+import '../../routes/routes.dart';
+import 'package:page_transition/page_transition.dart';
+
+import '../home/home_page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -82,7 +85,11 @@ Widget _bodySection(BuildContext context) {
     ),
     GestureDetector(
       onTap: () {
-        Navigator.pushReplacementNamed(context, AppRoute.home);
+        // Navigator.pushReplacementNamed(context, AppRoute.home);
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.rightToLeft, child: HomePage()));
       },
       child: Container(
         margin: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
