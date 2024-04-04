@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/values/colors.dart';
+import '../../bloc/bottom_navbar/bottom_navigation_bar_bloc.dart';
 import '../../bloc/home/home_bloc.dart';
 import '../../service/api_repository.dart';
 import 'widgets/home_page_widgets.dart';

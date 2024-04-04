@@ -3,6 +3,7 @@ import 'package:coffee_shop_app/src/bloc/drinks_detail/drinks_detail_bloc.dart';
 import 'package:coffee_shop_app/src/models/drinks_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -198,6 +199,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
               Container(
                 width: double.infinity,
                 height: 100.h,
+                margin: EdgeInsets.only(bottom: 10.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -229,6 +231,68 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                     )
                   ],
                 ),
+              ),
+              Divider(
+                height: 0.5,
+                color: AppColors.divider,
+              ),
+              BlocBuilder<DrinksDetailBloc, DrinksDetailState>(
+                builder: (context, state) {
+                  return Container(
+                    width: double.infinity,
+                    height: 60.h,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (state.quantity == 1) {
+                              return;
+                            } else {
+                              context
+                                  .read<DrinksDetailBloc>()
+                                  .add(MinusQuantityCounter());
+                            }
+                          },
+                          child: Container(
+                            width: 30.w,
+                            height: 30.h,
+                            margin: EdgeInsets.only(bottom: 15.h),
+                            child: Center(
+                              child: Icon(
+                                Icons.minimize_outlined,
+                                color: AppColors.primaryElement,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 25),
+                        Text(
+                          state.quantity.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18.sp),
+                        ),
+                        SizedBox(width: 25),
+                        GestureDetector(
+                          onTap: () => context
+                              .read<DrinksDetailBloc>()
+                              .add(AddQuantityCounter()),
+                          child: Container(
+                            width: 30.w,
+                            height: 30.h,
+                            child: Icon(
+                              Icons.add,
+                              color: AppColors.primaryElement,
+                              size: 30,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

@@ -1,11 +1,16 @@
-import 'package:coffee_shop_app/src/pages/login/widgets/login_page_widgets.dart';
+import 'package:coffee_shop_app/src/bloc/login/login_bloc.dart';
+import 'package:coffee_shop_app/src/bloc/sign_up/sign_up_bloc.dart';
+import 'package:coffee_shop_app/src/pages/home/home_page.dart';
 import 'package:coffee_shop_app/src/pages/sign_up/sign_up_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../common/values/colors.dart';
+import '../../../common/widgets/textField.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +20,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.clear();
+    _passwordController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,57 +53,128 @@ class _LoginPageState extends State<LoginPage> {
                 Colors.black.withOpacity(0.5), BlendMode.srcATop),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 30.h),
-              child: Text(
-                "Sign In.",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 60,
-                  color: AppColors.primaryBackground,
-                ),
-              ),
-            ),
-            buildTextField('Enter Email', 'email', 'user'),
-            buildTextField('Enter Password', 'password', 'lock'),
-            buildButton('Sign In', 'login'),
-            Padding(
-              padding: EdgeInsets.only(top: 20.h),
-              child: Row(
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
+            return Form(
+              key: _formKey,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Don\'t have an account? ',
-                    style: TextStyle(
-                      color: AppColors.primaryBackground,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: SignUpPage()));
-                    },
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30.h),
                     child: Text(
-                      'Sign up',
+                      "Sign In.",
                       style: TextStyle(
-                        color: AppColors.primaryElement,
                         fontWeight: FontWeight.w600,
-                        fontSize: 16.sp,
+                        fontSize: 60,
+                        color: AppColors.primaryBackground,
                       ),
                     ),
                   ),
+                  buildTextField(_emailController, 'email', 'Enter Email',
+                      context, state.message, 'login'),
+                  SizedBox(height: 20),
+                  buildTextField(_passwordController, 'password',
+                      'Enter Password', context, state.message, 'login'),
+                  GestureDetector(
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<LoginBloc>().add(LoginSubmitted(
+                            _emailController.text, _passwordController.text));
+                      }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 30.h),
+                      width: 325.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryElement,
+                        borderRadius: BorderRadius.circular(15.w),
+                      ),
+                      child: Center(
+                          child: state.status == LoginStatus.loading
+                              ? CircularProgressIndicator(
+                                  color: AppColors.primaryBackground,
+                                )
+                              : Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.normal,
+                                      color: AppColors.primaryBackground),
+                                )),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Don\'t have an account? ',
+                          style: TextStyle(
+                            color: AppColors.primaryBackground,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: SignUpPage()));
+                            context.read<LoginBloc>().add(LoginClearState());
+                          },
+                          child: Text(
+                            'Sign up',
+                            style: TextStyle(
+                              color: AppColors.primaryElement,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  BlocListener<LoginBloc, LoginState>(
+                    listener: (context, state) {
+                      switch (state.status) {
+                        case LoginStatus.success:
+                          Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.bottomToTop,
+                                  child: const HomePage()));
+                        case LoginStatus.initial:
+                          return;
+                        case LoginStatus.failure:
+                          SnackBar(
+                            content: Text(
+                              state.message,
+                              style: TextStyle(
+                                color: AppColors.primaryBackground,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            duration: Duration(seconds: 3),
+                            backgroundColor: Colors.red,
+                          );
+                        case LoginStatus.loading:
+                          return;
+                        case null:
+                          return;
+                      }
+                    },
+                    child: Container(), // Your widget tree here
+                  )
                 ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

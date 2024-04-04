@@ -17,3 +17,7 @@ class SelectDrinksOptions extends DrinksDetailEvent {
 
   SelectDrinksOptions(this.drinkOption);
 }
+
+class AddQuantityCounter extends DrinksDetailEvent {}
+
+class MinusQuantityCounter extends DrinksDetailEvent {}
