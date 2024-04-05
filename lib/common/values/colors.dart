@@ -10,8 +10,11 @@ class AppColors {
   static Color thirdText = HexColor("#DDDDDD");
   static Color fouthText = HexColor("#B7B7B7");
   static Color fifthText = HexColor("#2F4B4E");
+  static Color addressText = HexColor("#808080");
   static Color subText = HexColor("#9B9B9B");
   static Color divider = HexColor("#EAEAEA");
+  static Color bigDivider = HexColor("#F4f4f4");
+  static Color cashContainer = HexColor("#f6f6f6");
   static Color sizeBackground = HexColor("#FFF5EE");
   static Color sizeBorder = HexColor("#DEDEDE");
   static Color botttomNavBorder = HexColor("#F1F1F1");

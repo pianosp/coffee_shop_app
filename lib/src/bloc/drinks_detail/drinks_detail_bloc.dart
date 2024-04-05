@@ -26,10 +26,12 @@ class DrinksDetailBloc extends Bloc<DrinksDetailEvent, DrinksDetailState> {
   void addQuantityCounter(
       AddQuantityCounter event, Emitter<DrinksDetailState> emit) {
     emit(state.copyWith(quantity: state.quantity + 1));
+    emit(state.copyWith(price: event.price * state.quantity));
   }
 
   void minusQuantityCounter(
       MinusQuantityCounter event, Emitter<DrinksDetailState> emit) {
     emit(state.copyWith(quantity: state.quantity - 1));
+    emit(state.copyWith(price: event.price * state.quantity));
   }
 }

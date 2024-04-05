@@ -53,6 +53,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   Column(
                     children: [
                       IconButton(
+                        highlightColor: Colors.transparent,
                         icon: Icon(
                           Icons.home,
                           size: 35.0,
@@ -88,6 +89,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   Column(
                     children: [
                       IconButton(
+                        highlightColor: Colors.transparent,
                         icon: Icon(
                           Icons.access_time_filled,
                           size: 30.0,
@@ -123,6 +125,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   Column(
                     children: [
                       IconButton(
+                        highlightColor: Colors.transparent,
                         icon: Icon(
                           Icons.notifications,
                           size: 30.0,
@@ -158,6 +161,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   Column(
                     children: [
                       IconButton(
+                        highlightColor: Colors.transparent,
                         icon: Icon(
                           Icons.settings,
                           size: 30.0,

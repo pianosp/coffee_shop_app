@@ -30,7 +30,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
           child: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 24,
+              size: 20,
               color: AppColors.firstText,
             ),
             onPressed: () => Navigator.of(context).pop(),
@@ -44,75 +44,81 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 100.h,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.botttomNavShadow.withOpacity(0.25),
-                blurRadius: 24,
-                spreadRadius: 0,
-                offset: Offset(0, -10), // changes position of shadow
-              ),
-            ],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24.r),
-              topRight: Radius.circular(24.r),
-            ),
-            border: Border.all(
-                width: 2,
-                color: AppColors.botttomNavBorder,
-                strokeAlign: BorderSide.strokeAlignInside)),
-        child: Padding(
-          padding: EdgeInsets.only(left: 25.w, right: 25.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Price",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 12.sp,
-                        color: AppColors.subText),
+      bottomNavigationBar: BlocBuilder<DrinksDetailBloc, DrinksDetailState>(
+        builder: (context, state) {
+          return Container(
+            width: double.infinity,
+            height: 100.h,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.botttomNavShadow.withOpacity(0.25),
+                    blurRadius: 24,
+                    spreadRadius: 0,
+                    offset: Offset(0, -10), // changes position of shadow
                   ),
-                  Text(
-                    "฿ " + drinks!.price.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18.sp,
-                        color: AppColors.primaryElement),
+                ],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24.r),
+                  topRight: Radius.circular(24.r),
+                ),
+                border: Border.all(
+                    width: 2,
+                    color: AppColors.botttomNavBorder,
+                    strokeAlign: BorderSide.strokeAlignInside)),
+            child: Padding(
+              padding: EdgeInsets.only(left: 25.w, right: 25.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Price",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            fontSize: 12.sp,
+                            color: AppColors.subText),
+                      ),
+                      Text(
+                        state.price == 0
+                            ? "฿ ${drinks!.price}"
+                            : "฿ ${state.price}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18.sp,
+                            color: AppColors.primaryElement),
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      width: 217.w,
+                      height: 62.h,
+                      decoration: BoxDecoration(
+                          color: AppColors.primaryElement,
+                          borderRadius: BorderRadius.circular(16.r)),
+                      child: Center(
+                        child: Text(
+                          "Add To Cart",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.sp,
+                              color: AppColors.primaryBackground),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 217.w,
-                  height: 62.h,
-                  decoration: BoxDecoration(
-                      color: AppColors.primaryElement,
-                      borderRadius: BorderRadius.circular(16.r)),
-                  child: Center(
-                    child: Text(
-                      "Add To Cart",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.sp,
-                          color: AppColors.primaryBackground),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -252,7 +258,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                             } else {
                               context
                                   .read<DrinksDetailBloc>()
-                                  .add(MinusQuantityCounter());
+                                  .add(MinusQuantityCounter(drinks.price));
                             }
                           },
                           child: Container(
@@ -278,7 +284,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                         GestureDetector(
                           onTap: () => context
                               .read<DrinksDetailBloc>()
-                              .add(AddQuantityCounter()),
+                              .add(AddQuantityCounter(drinks.price)),
                           child: Container(
                             width: 30.w,
                             height: 30.h,

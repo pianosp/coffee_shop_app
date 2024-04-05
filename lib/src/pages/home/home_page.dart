@@ -1,9 +1,11 @@
 import 'package:coffee_shop_app/src/bloc/drinks_detail/drinks_detail_bloc.dart';
+import 'package:coffee_shop_app/src/pages/cart/cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../common/values/colors.dart';
 import '../../bloc/bottom_navbar/bottom_navigation_bar_bloc.dart';
@@ -30,6 +32,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primaryElement,
+        shape: CircleBorder(),
+        onPressed: () => Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.rightToLeft, child: const CartPage())),
+        child: Center(
+          child: Icon(
+            Icons.shopping_cart_rounded,
+            color: AppColors.primaryBackground,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
