@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../../../common/values/colors.dart';
-import '../../bloc/bottom_navbar/bottom_navigation_bar_bloc.dart';
-import '../home/home_page.dart';
+import '../values/colors.dart';
+import '../../src/bloc/bottom_navbar/bottom_navigation_bar_bloc.dart';
+import '../../src/pages/home/home_page.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});

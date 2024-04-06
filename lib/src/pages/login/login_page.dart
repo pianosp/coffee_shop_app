@@ -1,10 +1,7 @@
 import 'package:coffee_shop_app/src/bloc/login/login_bloc.dart';
-import 'package:coffee_shop_app/src/bloc/sign_up/sign_up_bloc.dart';
 import 'package:coffee_shop_app/src/pages/home/home_page.dart';
 import 'package:coffee_shop_app/src/pages/sign_up/sign_up_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';

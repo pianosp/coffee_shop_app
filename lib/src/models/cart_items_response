@@ -1,0 +1,73 @@
+// To parse this JSON data, do
+//
+//     final cartItemsResponse = cartItemsResponseFromJson(jsonString);
+
+import 'dart:convert';
+
+CartItemsResponse cartItemsResponseFromJson(String str) => CartItemsResponse.fromJson(json.decode(str));
+
+String cartItemsResponseToJson(CartItemsResponse data) => json.encode(data.toJson());
+
+class CartItemsResponse {
+    final String? status;
+    final String? message;
+    final int? badge;
+    final List<Datum>? data;
+
+    CartItemsResponse({
+        this.status,
+        this.message,
+        this.badge,
+        this.data,
+    });
+
+    factory CartItemsResponse.fromJson(Map<String, dynamic> json) => CartItemsResponse(
+        status: json["status"],
+        message: json["message"],
+        badge: json["badge"],
+        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "status": status,
+        "message": message,
+        "badge": badge,
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    };
+}
+
+class Datum {
+    final int? cartItemId;
+    final String? size;
+    final int? qty;
+    final String? name;
+    final String? img;
+    final int? totalPrice;
+
+    Datum({
+        this.cartItemId,
+        this.size,
+        this.qty,
+        this.name,
+        this.img,
+        this.totalPrice,
+    });
+
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        cartItemId: json["cart_item_id"],
+        size: json["size"],
+        qty: json["qty"],
+        name: json["name"],
+        img: json["img"],
+        totalPrice: json["total_price"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "cart_item_id": cartItemId,
+        "size": size,
+        "qty": qty,
+        "name": name,
+        "img": img,
+        "total_price": totalPrice,
+    };
+}

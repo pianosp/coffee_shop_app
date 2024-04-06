@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/src/pages/cart/cart.dart';
 import 'package:coffee_shop_app/src/pages/drinks_detail/drinks_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,7 @@ import '../../../models/drinks_model.dart';
 
 Widget buildSearchField() {
   return Container(
-      width: 315.w,
+      width: 320.w,
       height: 52.h,
       margin: EdgeInsets.only(bottom: 20.h),
       decoration: BoxDecoration(
@@ -208,6 +209,155 @@ Widget drinkOptionsContainer(
                 : AppColors.firstText,
           ),
         ),
+      ),
+    ),
+  );
+}
+
+Widget buildFloatingBtn(int badge, BuildContext context) {
+  return Container(
+    child: FittedBox(
+      child: Stack(
+        alignment: Alignment(0.6, -0.6),
+        children: [
+          FloatingActionButton(
+            // Your actual Fab
+            onPressed: () => Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.rightToLeft, child: CartPage())),
+            backgroundColor: AppColors.primaryElement,
+            child: Icon(
+              Icons.shopping_cart,
+              color: AppColors.primaryBackground,
+              size: 30,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(),
+          ),
+          Container(
+            // This is your Badge
+            child: Center(
+              // Here you can put whatever content you want inside your Badge
+              child: Text(
+                badge.toString(),
+                style: TextStyle(
+                  color: AppColors.primaryElement,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            constraints: BoxConstraints(minHeight: 20, minWidth: 20),
+            decoration: BoxDecoration(
+              // This controls the shadow
+              boxShadow: [
+                BoxShadow(
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    color: Colors.black.withAlpha(50))
+              ],
+              borderRadius: BorderRadius.circular(16),
+              color: AppColors
+                  .primaryBackground, // This would be color of the Badge
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildGridViewDrinks(
+  List tempDrinksList,
+  List drinksList,
+) {
+  return GridView.builder(
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 40,
+      mainAxisSpacing: 20,
+      childAspectRatio: 0.65,
+    ),
+    shrinkWrap: true,
+    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+    itemCount:
+        tempDrinksList.isEmpty ? drinksList.length : tempDrinksList.length,
+    itemBuilder: (context, index) {
+      if (tempDrinksList.isNotEmpty) {
+        final filterDrinks = tempDrinksList[index];
+        return buildGridContainer(filterDrinks, context);
+      } else {
+        final drink = drinksList[index];
+        return buildGridContainer(drink, context);
+      }
+    },
+  );
+}
+
+Widget buildHeaderSection() {
+  return Container(
+    width: double.infinity,
+    height: 230.h,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
+        colors: [
+          Color(0xFF313131), // Bottom left color
+          Color(0xFF131313), // Top right color
+        ],
+      ),
+    ),
+    child: Container(
+      margin: EdgeInsets.only(top: 50),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Location",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w300,
+                        color: AppColors.fouthText,
+                      ),
+                    ),
+                    Text(
+                      "RigbetelLabs, Pune",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.thirdText,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  width: 44.w,
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  child: Image.asset("assets/images/profile.jpg"),
+                )
+              ],
+            ),
+          ),
+          SizedBox(height: 30),
+          buildSearchField(),
+        ],
       ),
     ),
   );

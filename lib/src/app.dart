@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/src/bloc/cart/bloc/cart_bloc.dart';
 import 'package:coffee_shop_app/src/bloc/login/login_bloc.dart';
 import 'package:coffee_shop_app/src/bloc/sign_up/sign_up_bloc.dart';
 import 'package:coffee_shop_app/src/routes/routes.dart';
@@ -9,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'bloc/bottom_navbar/bottom_navigation_bar_bloc.dart';
 import 'bloc/drinks_detail/drinks_detail_bloc.dart';
 import 'bloc/home/home_bloc.dart';
-import 'pages/navigation/navigation_page.dart';
+import '../common/navigation/navigation_page.dart';
 
 final navigatorState = GlobalKey<NavigatorState>();
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
     final loginBloc = BlocProvider(create: (context) => LoginBloc());
     final bottomNavBar =
         BlocProvider(create: (context) => BottomNavigationBarBloc());
+    final cartBloc = BlocProvider(create: (context) => CartBloc());
 
     return MultiBlocProvider(
       providers: [
@@ -32,7 +34,8 @@ class MyApp extends StatelessWidget {
         drinksDetailBloc,
         signupBloc,
         loginBloc,
-        bottomNavBar
+        bottomNavBar,
+        cartBloc
       ],
       child: ScreenUtilInit(
         builder: (context, child) => MaterialApp(
@@ -43,7 +46,7 @@ class MyApp extends StatelessWidget {
               textTheme: GoogleFonts.soraTextTheme(
                 Theme.of(context).textTheme,
               )),
-          home: NavigationPage(),
+          home: const NavigationPage(),
           routes: AppRoute.all,
           navigatorKey: navigatorState,
         ),

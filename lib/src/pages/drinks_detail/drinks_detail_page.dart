@@ -1,11 +1,13 @@
 import 'package:coffee_shop_app/common/values/colors.dart';
+import 'package:coffee_shop_app/src/bloc/cart/bloc/cart_bloc.dart';
 import 'package:coffee_shop_app/src/bloc/drinks_detail/drinks_detail_bloc.dart';
 import 'package:coffee_shop_app/src/models/drinks_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:coffee_shop_app/src/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'widgets/drinks_detail_widgets.dart';
 
 class DrinksDetailPage extends StatefulWidget {
   final DrinksModel? drinks;
@@ -46,78 +48,8 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
       ),
       bottomNavigationBar: BlocBuilder<DrinksDetailBloc, DrinksDetailState>(
         builder: (context, state) {
-          return Container(
-            width: double.infinity,
-            height: 100.h,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.botttomNavShadow.withOpacity(0.25),
-                    blurRadius: 24,
-                    spreadRadius: 0,
-                    offset: Offset(0, -10), // changes position of shadow
-                  ),
-                ],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24.r),
-                  topRight: Radius.circular(24.r),
-                ),
-                border: Border.all(
-                    width: 2,
-                    color: AppColors.botttomNavBorder,
-                    strokeAlign: BorderSide.strokeAlignInside)),
-            child: Padding(
-              padding: EdgeInsets.only(left: 25.w, right: 25.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Price",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 12.sp,
-                            color: AppColors.subText),
-                      ),
-                      Text(
-                        state.price == 0
-                            ? "฿ ${drinks!.price}"
-                            : "฿ ${state.price}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18.sp,
-                            color: AppColors.primaryElement),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: 217.w,
-                      height: 62.h,
-                      decoration: BoxDecoration(
-                          color: AppColors.primaryElement,
-                          borderRadius: BorderRadius.circular(16.r)),
-                      child: Center(
-                        child: Text(
-                          "Add To Cart",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                              color: AppColors.primaryBackground),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return buildCustomBottomNavBar(state.price, drinks!, context,
+              state.selectedSize, state.quantity);
         },
       ),
       body: SingleChildScrollView(
@@ -168,10 +100,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                   ],
                 ),
               ),
-              Divider(
-                height: 0.5,
-                color: AppColors.divider,
-              ),
+              Divider(height: 0.5, color: AppColors.divider),
               Container(
                 margin: EdgeInsets.only(top: 10.h),
                 width: double.infinity,
@@ -300,6 +229,26 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                   );
                 },
               ),
+              BlocListener<CartBloc, CartState>(
+                listener: (context, state) {
+                  if (state.cartAddedStatus == CartAddedStatus.success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Added to cart"),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.popAndPushNamed(context, AppRoute.home);
+                    context.read<CartBloc>().add(CartItemAddedClearState());
+                  } else if (state.cartAddedStatus == CartAddedStatus.failure) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Failed to cart items"),
+                      duration: Duration(seconds: 2),
+                    ));
+                  }
+                },
+                child: Container(),
+              )
             ],
           ),
         ),
