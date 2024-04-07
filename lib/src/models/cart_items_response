@@ -13,12 +13,14 @@ class CartItemsResponse {
     final String? message;
     final int? badge;
     final List<Datum>? data;
+    final int? total;
 
     CartItemsResponse({
         this.status,
         this.message,
         this.badge,
         this.data,
+        this.total,
     });
 
     factory CartItemsResponse.fromJson(Map<String, dynamic> json) => CartItemsResponse(
@@ -26,6 +28,7 @@ class CartItemsResponse {
         message: json["message"],
         badge: json["badge"],
         data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+        total: json["total"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -33,6 +36,7 @@ class CartItemsResponse {
         "message": message,
         "badge": badge,
         "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "total": total,
     };
 }
 
@@ -42,6 +46,7 @@ class Datum {
     final int? qty;
     final String? name;
     final String? img;
+    final int? unitPrice;
     final int? totalPrice;
 
     Datum({
@@ -50,6 +55,7 @@ class Datum {
         this.qty,
         this.name,
         this.img,
+        this.unitPrice,
         this.totalPrice,
     });
 
@@ -59,6 +65,7 @@ class Datum {
         qty: json["qty"],
         name: json["name"],
         img: json["img"],
+        unitPrice: json["unit_price"],
         totalPrice: json["total_price"],
     );
 
@@ -68,6 +75,7 @@ class Datum {
         "qty": qty,
         "name": name,
         "img": img,
+        "unit_price": unitPrice,
         "total_price": totalPrice,
     };
 }

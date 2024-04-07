@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/src/models/cart_update_response.dart';
 import 'package:coffee_shop_app/src/models/login_response.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -6,6 +7,7 @@ import '../models/cart_added_response.dart';
 import '../models/cart_items_response';
 import '../models/drinks_model.dart';
 import '../models/sign_up_response.dart';
+import '../models/user_response.dart';
 
 //token for Test
 const token =
@@ -48,6 +50,32 @@ class ApiProvider {
       );
       final cartItemsResponse = CartItemsResponse.fromJson(response.data);
       return cartItemsResponse;
+    } catch (error) {
+      throw Exception("Failed to added cart");
+    }
+  }
+
+  Future<CartUpdateResponse> updateCartItems(
+      int cartItemId, String size, int qty) async {
+    try {
+      Response response = await _dio.put('$baseUrl/cart',
+          options: Options(headers: {"authorization": token}),
+          data: {"cart_item_id": cartItemId, "size": size, "qty": qty});
+      final cartUpdateResponse = CartUpdateResponse.fromJson(response.data);
+      print(cartUpdateResponse.message);
+      return cartUpdateResponse;
+    } catch (error) {
+      throw Exception("Failed to added cart");
+    }
+  }
+
+  Future<CartUpdateResponse> deleteCartItems(int cartItemId) async {
+    try {
+      Response response = await _dio.delete('$baseUrl/cart',
+          options: Options(headers: {"authorization": token}),
+          data: {"cart_item_id": cartItemId});
+      final cartDeleteResponse = CartUpdateResponse.fromJson(response.data);
+      return cartDeleteResponse;
     } catch (error) {
       throw Exception("Failed to added cart");
     }
@@ -98,6 +126,20 @@ class ApiProvider {
     } catch (e) {
       print(e.toString());
       throw Exception("Error occurred while logging in frontend");
+    }
+  }
+
+  Future<UserResponse> getUsers() async {
+    try {
+      Response response = await _dio.post(
+        '$baseUrl/users',
+        options: Options(headers: {"authorization": token}),
+      );
+      final userResponse = UserResponse.fromJson(response.data);
+      return userResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Error occurred while fetch user in frontend");
     }
   }
 }

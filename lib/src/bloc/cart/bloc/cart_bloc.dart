@@ -1,9 +1,8 @@
-import 'dart:async';
-import 'dart:ffi';
-
-import 'package:bloc/bloc.dart';
 import 'package:coffee_shop_app/src/service/api_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../models/cart_items_response';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -13,10 +12,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartState()) {
     on<CartItemAddedEvent>(cartItemAdded);
     on<CartItemAddedClearState>(clearCartItemAddedState);
-    on<CartItemGetEvent>(getCartItesm);
+    on<CartItemGetEvent>(getCartItems);
   }
 
-  FutureOr<void> cartItemAdded(
+  Future<void> cartItemAdded(
       CartItemAddedEvent event, Emitter<CartState> emit) async {
     final result =
         await _apiRepository.cartAdded(event.drinkId, event.size, event.qty);
@@ -38,14 +37,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(cartAddedStatus: CartAddedStatus.initial));
   }
 
-  FutureOr<void> getCartItesm(
+  Future<void> getCartItems(
       CartItemGetEvent event, Emitter<CartState> emit) async {
-    final result = await _apiRepository.getCartItems();
-    print(result.badge);
-    if (result.status == '200') {
-      emit(state.copyWith(badge: result.badge));
-    } else {
-      throw Exception("Failed to fetch CartItems at (cart_bloc)");
-    }
+    await _apiRepository.getCartItems().then((value) {
+      emit(state.copyWith(
+        badge: value.badge,
+        cartItems: value.data,
+        cartItemsStatus: CartItemsStatus.success,
+        totalPrice: value.total,
+      ));
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(cartItemsStatus: CartItemsStatus.failure));
+    });
   }
 }

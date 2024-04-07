@@ -19,6 +19,7 @@ class AppColors {
   static Color sizeBorder = HexColor("#DEDEDE");
   static Color botttomNavBorder = HexColor("#F1F1F1");
   static Color botttomNavShadow = HexColor("#E4E4E4");
+  static Color botttomDanger = HexColor("#d9534f");
   static Color disableNavIcon = HexColor("#8D8D8D");
   static Color hintText = HexColor("#989898");
   static Color backgroundTextField = HexColor("#313131");

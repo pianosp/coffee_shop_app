@@ -46,11 +46,8 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BlocBuilder<DrinksDetailBloc, DrinksDetailState>(
-        builder: (context, state) {
-          return buildCustomBottomNavBar(state.price, drinks!, context,
-              state.selectedSize, state.quantity);
-        },
+      bottomNavigationBar: CustomBottomNavBar(
+        drinks: drinks,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -167,13 +164,10 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                   ],
                 ),
               ),
-              Divider(
-                height: 0.5,
-                color: AppColors.divider,
-              ),
+              Divider(height: 0.5, color: AppColors.divider),
               BlocBuilder<DrinksDetailBloc, DrinksDetailState>(
                 builder: (context, state) {
-                  return Container(
+                  return SizedBox(
                     width: double.infinity,
                     height: 60.h,
                     child: Row(
@@ -203,18 +197,18 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 25),
+                        const SizedBox(width: 25),
                         Text(
                           state.quantity.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18.sp),
                         ),
-                        SizedBox(width: 25),
+                        const SizedBox(width: 25),
                         GestureDetector(
                           onTap: () => context
                               .read<DrinksDetailBloc>()
                               .add(AddQuantityCounter(drinks.price)),
-                          child: Container(
+                          child: SizedBox(
                             width: 30.w,
                             height: 30.h,
                             child: Icon(
@@ -238,7 +232,7 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
                         duration: Duration(seconds: 2),
                       ),
                     );
-                    Navigator.popAndPushNamed(context, AppRoute.home);
+                    Navigator.popAndPushNamed(context, AppRoute.root);
                     context.read<CartBloc>().add(CartItemAddedClearState());
                   } else if (state.cartAddedStatus == CartAddedStatus.failure) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -255,40 +249,4 @@ class _DrinksDetailPageState extends State<DrinksDetailPage> {
       ),
     );
   }
-}
-
-Widget sizeOptionsContainer(
-    String size, DrinksDetailState state, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      context.read<DrinksDetailBloc>().add(SelectSizeOptions(size));
-    },
-    child: Container(
-      width: 85.w,
-      height: 40.h,
-      decoration: BoxDecoration(
-          color: size == state.selectedSize
-              ? AppColors.sizeBackground
-              : Colors.white,
-          border: Border.all(
-            width: 1.5,
-            color: size == state.selectedSize
-                ? AppColors.primaryElement
-                : AppColors.sizeBorder,
-          ),
-          borderRadius: BorderRadius.circular(12.r)),
-      child: Center(
-        child: Text(
-          size,
-          style: TextStyle(
-            fontWeight: FontWeight.w300,
-            fontSize: 14.sp,
-            color: size == state.selectedSize
-                ? AppColors.primaryElement
-                : AppColors.firstText,
-          ),
-        ),
-      ),
-    ),
-  );
 }

@@ -1,4 +1,4 @@
-import 'package:coffee_shop_app/src/pages/cart/cart.dart';
+import 'package:coffee_shop_app/src/pages/cart/cart_page.dart';
 import 'package:coffee_shop_app/src/pages/drinks_detail/drinks_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
