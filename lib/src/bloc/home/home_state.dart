@@ -15,7 +15,7 @@ class HomeState extends Equatable {
     this.drinksList = const <DrinksModel>[],
     this.tempDrinksList = const <DrinksModel>[],
     this.message = "",
-  });
+  });s
 
   HomeState copyWith({
     HomeStatus? status,
